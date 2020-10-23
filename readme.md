@@ -4,6 +4,11 @@ November 2020
 ![3in1 title](https://raw.githubusercontent.com/strgaltdel/3in1/master/img/3in1_title.png)
 
 
+
+
+
+
+
 ### Einführung
 
 "3in1" ist ein Mehrzweck Meßinstrument für den RC Bereich
@@ -13,6 +18,9 @@ Basierend auf der Arduino Mega2560 Platform können RC Hobbyisten folgende Werte
   * Schwerpunkt
   * EWD
   * Ruderausschlag
+
+
+
 
 
   
@@ -30,6 +38,9 @@ Basierend auf der Arduino Mega2560 Platform können RC Hobbyisten folgende Werte
   	* GY521 IMU
   
   
+
+
+
   
 ### integrierte Funktionen
 
