@@ -271,8 +271,10 @@ void deflection()
 	if((millis()-startMillis) >= (DEFL_REFRESHRATE - DEFL_AVERAGETIME)){
 	// and now fill variables to built average over n readings
 		avCounter++;
-		avSum1 += IMU_0.pitch;   
-		avSum2 += IMU_1.pitch;    
+		avSum1 += IMU_0.roll;   		// roll or pitch depends on mechanical pcb orientation
+		avSum2 += IMU_1.roll;    
+		//avSum1 += IMU_0.pitch;   
+		//avSum2 += IMU_1.pitch;    
 	}
  
 

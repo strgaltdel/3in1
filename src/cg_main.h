@@ -117,6 +117,8 @@ void cg_main()
 	
 	startMillis = millis();												// init refresh counter							
 
+	frontCell.tare(CELL_SAMPLE_ITERATIONS);								// tare at start
+	rearCell.tare(CELL_SAMPLE_ITERATIONS);	
 	
   while (cgStatus == true)
   {
