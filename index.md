@@ -1,7 +1,7 @@
 ## 3in1
 November 2020
 
-![OXS logo](https://https://github.com/strgaltdel/3in1/img/3in1_Logo.png)
+![3in1 logo](https://github.com/strgaltdel/3in1/img/3in1_Logo.png)
 
 
 ### Einführung
