@@ -1,7 +1,7 @@
 ## 3in1
 November 2020
 
-![3in1 title](//https://github.com/strgaltdel/3in1/tree/master/img/3in1_Logo.jpg)
+![3in1 title](https://github.com/strgaltdel/3in1/tree/master/img/3in1_Logo.jpg)
 
 
 ### Einführung
