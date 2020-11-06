@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	includes_main.h														##
 ##  content:		all header files needed for app										##
-##  date:			12 Jan 2020															##
-##  rev.:			0.9																	##
+##  date:			12 Oct 2020															##
+##  rev.:			1.0																	##
 ##  by strgaltdel 																		##
 ##########################################################################################
 
@@ -37,19 +37,19 @@ Status status;
 
 
 
-#include <EEPROM.h>				// eeprom classes								https://www.arduino.cc/en/Reference/EEPROM
+#include <EEPROM.h>				// eeprom classes								standard lib	  https://www.arduino.cc/en/Reference/EEPROM
 
-#include <Wire.h>				// imu communication  							https://www.i2cdevlib.com
+#include <Wire.h>				// imu communication  							https://github.com/jrowberg/i2cdevlib								// https://www.i2cdevlib.com
 #include <TouchScreen.h>		// touch support								https://github.com/adafruit/Adafruit_TouchScreen
 #include <Adafruit_GFX.h>		// used for rounded buttons						https://github.com/adafruit/Adafruit-GFX-Library
 #include <MCUFRIEND_kbv.h>		// flexible lcd support							https://www.arduinolibraries.info/libraries/mcufriend_kbv
-#include <Filters.h> 			// Filter classes for smoothing IMU data		https://playground.arduino.cc/Code/Filters/														// get filter classes
-#include <HX711.h>				// load cell support	 (ADA)
-//#include <HX711_ADC.h>		// load cell support							https://github.com/olkal/HX711_ADC c					
+#include <Filters.h> 			// Filter classes for smoothing IMU data		https://github.com/JonHub/Filters/blob/master/Filters.h				// get filter classes
+#include <HX711.h>				// load cell support	 						https://github.com/bogde/HX711					
 #include <MovingAverage.h>		// simple way to build moving avg/used in cg	https://github.com/sofian/MovingAverage
+#include <I2Cdev.h>				// some i2c, mpu6050 required methods			https://github.com/jrowberg/i2cdevlib
+
+
 #include "custom.h"				// definitions / some colour customizing		## app coding
-
-
 
 MCUFRIEND_kbv tft;
 

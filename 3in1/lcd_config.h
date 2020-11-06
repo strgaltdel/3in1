@@ -36,6 +36,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 // Touchscreen pinning
 // please evaluate by looking into sample code from supplier
 
+
+/*
 // 2.8 lcd; set together with uno & 2.4" display
 // touch panel
 #define YP A2  // must be an analog pin, use "An" notation!
@@ -47,8 +49,10 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 #define LCD_CD A2
 #define LCD_WR A1
 #define LCD_RD A0
+*/
 
-/*
+
+
 //	2.8 lcd, chinese supplier, yellow pin header
 // touch panel
 #define YP A3  // must be an analog pin, use "An" notation!
@@ -60,7 +64,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 #define LCD_CD A2
 #define LCD_WR A1
 #define LCD_RD A0
-*/
+
 
 
 

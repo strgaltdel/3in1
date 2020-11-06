@@ -1,31 +1,9 @@
-/* ***************************************************************************************
-this code is part of "3in1.ino", an app to measure cg, incidence & deflection of rc models
-
-##########################################################################################
-##																						##
-##  header file: 	imu.h																##
-##  content:		definition of a class to obtain IMU data for Arduino				##
-##  date:			12 Jan 2020															##
-##  rev.:			0.9																	##
-##  by strgaltdel 																		##
-##########################################################################################
-
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-	
-**************************************************************************************
-
+/*
+- header file: 	imu.h
+- content:		definition of a class to obtain IMU data for Arduino
+- date:			19 Jan 2020
+- rev.:			0.9
+by strgaltdel
 
 class AngleSens:
 init(int angleSensorNum);
@@ -39,6 +17,11 @@ in order to adopt other IMU types you have to change:
 		- AngleSens::getRawAccValues()
 		- IMUSCALE; angSensor_Addr
 		
+		
+		  
+  1.0	erstes release
+  1.1	Methoden zur Ermittlung von RAW-Durschnittswerte & Streuung/Varianz einer Meßreihe
+		Methode für Verbindungstest
 */
 
 
@@ -49,11 +32,13 @@ in order to adopt other IMU types you have to change:
 
 #include "includes_main.h"
 
-
 // IMU specific:
 #define IMUSCALE 16384														// IMU resolution / scaling of sensor (mpu6050=16bit, so 90 degree=14bit >> 2^14=16384)
 int angSensor_Addr[5]={0x68,0x69,0x69,0x68,0x69};							// enter addresses from sensor0, 1, 2, 3, 4 i.e. GY521: 0x68 or 0x69
 
+#define MPU6050_RA_WHO_AM_I         0x75
+#define MPU6050_WHO_AM_I_BIT        6
+#define MPU6050_WHO_AM_I_LENGTH     6
 
 
 float filterFrequency = 0.2;    											// LP: filters out changes faster than x Hz  ; higher value >> faster sensor response, more noise
@@ -79,6 +64,15 @@ typedef struct {
    float roll;
    float yaw;
 } Isensor;
+
+/*****************    struct for variance data              ************/
+typedef struct {
+   int16_t avgX;
+   int16_t avgY;
+   float varianceX;
+   float varianceY;
+} SensVar;
+
 
 #ifndef EEPROM_H															// if not defined in eeprom.h init ImuCal array
 /*****************   struct for IMU calibration values      ************/
@@ -135,8 +129,8 @@ int EMA_function(float alpha, int latest, int stored){						// ema function
 void getImuCalValues(int num){
 
   if(READ_EEPROM) {  
-	Serial.println("get eeprom cal data");
-	Eeprom::getIMUValues(num);
+	  Serial.println("get eeprom cal data");
+  //Eeprom::getIMUValues(num);
   }
   else {
 	 Serial.println("get coded cal data");
@@ -155,14 +149,23 @@ void getImuCalValues(int num){
 // definition class
 class AngleSens {
   private:
+    uint8_t buffer[14];
   
   public:
     AngleSens() {};
 	void init(int angleSensorNum);
+	uint8_t getDeviceID(uint8_t id);
+	void setDeviceID(uint8_t imuAddr, uint8_t id);
+	bool testConnection(uint8_t id);
+
+	
     RawAsensor getRawAccValues(int angleSensorNum);
 	Isensor getAngleValues(int angleSensorNum);
 	Isensor getfilteredAngleValues(int angleSensorNum);
 	Isensor getDEMAfilteredAngleValues(int angleSensorNum);
+	Isensor getrawValues(int angleSensorNum);
+	SensVar calcVariance(int angleSensorNum);
+
 };
 
 
@@ -179,7 +182,10 @@ void AngleSens::init(int angleSensorNum)
   // Wire.write(0x1c);																	// acc sensitivity register mpu6050
   // Wire.write(0);																		// set to 0  =2g
   Wire.endTransmission(true);															// end init
-  getImuCalValues(angleSensorNum);														// get calibration data from function
+
+  Serial.print("init IMU  0x");
+  Serial.println(angSensor_Addr[angleSensorNum],HEX);
+    getImuCalValues(angleSensorNum);														// get calibration data from function
   
 }
 
@@ -196,9 +202,9 @@ RawAsensor AngleSens::getRawAccValues	(int angleSensorNum)
 	Wire.write(0x3B);																	// get access to acc registers
 	Wire.endTransmission(false);
 	Wire.requestFrom(angSensor_Addr[angleSensorNum],6,true);							// request 6 bytes
-	
+	//Serial.println(angSensor_Addr[angleSensorNum],HEX);
 	if(not(Wire.available())) {
-		Serial.print("kein Sensor ");Serial.println(angleSensorNum);
+		//Serial.print("kein Sensor ");Serial.println(angleSensorNum);
 	}
 	else {
 		while(Wire.available() < 6);													// await availability
@@ -209,6 +215,8 @@ RawAsensor AngleSens::getRawAccValues	(int angleSensorNum)
 		Wire.endTransmission(true);	
 	}
 	xcounter++;
+
+	//Serial.print(angleSensorNum);Serial.print("\t");Serial.print(RawImu.aX);Serial.print("\t");Serial.print(RawImu.aX);Serial.print("\t");Serial.println(RawImu.aX);
 	return (RawImu);																	// return structure
 }
 
@@ -230,7 +238,7 @@ Isensor AngleSens::getAngleValues	(int angleSensorNum)
 	xAng = (tmpraw_A.aX - ImuCAL[angleSensorNum].offsX)/(ImuCAL[angleSensorNum].gainX*IMUSCALE);   
 	yAng = (tmpraw_A.aY - ImuCAL[angleSensorNum].offsY)/(ImuCAL[angleSensorNum].gainY*IMUSCALE);   
 	zAng = (tmpraw_A.aZ - ImuCAL[angleSensorNum].offsZ)/(ImuCAL[angleSensorNum].gainZ*IMUSCALE);  
-
+	
 	// calc angle values (DEG)
     tmp_imu.X= RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);									// x-angle
     tmp_imu.Y= RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);									// y-angle
@@ -243,8 +251,107 @@ Isensor AngleSens::getAngleValues	(int angleSensorNum)
 }
 
 
+// ############  method "getrawValues"
 
-// ############  method "getfilteredAngleValues"
+Isensor AngleSens::getrawValues	(int angleSensorNum)
+{
+	Isensor tmp_imu;																	// declare structure
+	float xAng, yAng, zAng;																// temp "smoothed" values
+	RawAsensor tmpraw_A;																// raw data used in this run
+
+	tmpraw_A = AngleSens::getRawAccValues(angleSensorNum);								// get raw data from imu (not calibrated)
+
+
+	
+	// raw data :
+	xAng = (tmpraw_A.aX);
+	yAng = (tmpraw_A.aY);
+	zAng = (tmpraw_A.aZ);
+	Serial.println(xAng);
+	
+	// return values
+	tmp_imu.pitch  = xAng;     // roll
+	tmp_imu.roll   = yAng;     // pitch	
+	tmp_imu.yaw    = zAng;     // roll
+
+	return (tmp_imu);																	// return structure
+}
+
+
+// ############  method "getDeviceID"
+uint8_t AngleSens::getDeviceID(uint8_t imuAddr) {
+	buffer[0] = 0;
+	I2Cdev::readBits(imuAddr, MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, buffer);
+    return buffer[0];
+}
+
+void AngleSens::setDeviceID(uint8_t imuAddr, uint8_t id) {
+    I2Cdev::writeBits(imuAddr, MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, id);
+}
+
+// ############  method "testConnection"
+bool AngleSens::testConnection(uint8_t imuAddr) {
+	Serial.print("Connection  0x"); Serial.println(imuAddr);
+	Serial.println(getDeviceID(imuAddr));
+    return getDeviceID(imuAddr) == 0x34;
+}
+
+
+
+
+// ############  method "calcVariance"
+
+SensVar AngleSens::calcVariance	(int angleSensorNum)
+{
+	SensVar tmp_var;																	// declare structure
+	RawAsensor tmpraw_A;																// raw data used in this run
+
+	int 	avgLoops = 700;															// number of loops to build average
+	int 	measLoops = 1500;															// number of loops to eval variance
+	int32_t SensAverageX = 0;
+	int32_t SensAverageY = 0;
+	int32_t	varX =0;
+    int32_t	varY =0;
+	int		i;
+
+	Serial.print("averaging  IMU");Serial.print(angleSensorNum);
+	
+	// build average
+	for (i=0; i<avgLoops; i++) {
+		tmpraw_A = AngleSens::getRawAccValues(angleSensorNum);							// get raw data from imu (not calibrated)
+		SensAverageX += tmpraw_A.aX;
+		SensAverageY += tmpraw_A.aY;
+		//Serial.println(tmpraw_A.aX);
+	}	
+	SensAverageX = SensAverageX/avgLoops;
+	SensAverageY = SensAverageY/avgLoops;
+	
+	Serial.println("variance");
+	
+	// eval variance
+	for (i=0; i<measLoops; i++) {
+		tmpraw_A = AngleSens::getRawAccValues(angleSensorNum);							// get raw data from imu (not calibrated)
+		varX += sq(tmpraw_A.aX - SensAverageX);											// built square from difference
+		varY += sq(tmpraw_A.aY - SensAverageY);
+		//Serial.print((tmpraw_A.aX - SensAverageX));Serial.print("      ");Serial.print(sq(tmpraw_A.aX - SensAverageX));;Serial.print("      ");Serial.println(varX);
+	}	
+	varX = sqrt(varX/(measLoops-1));
+    varY = sqrt(varY/(measLoops-1));
+
+	
+	// return values
+	tmp_var.avgX  		= SensAverageX;     											// averageX
+	tmp_var.avgY  		= SensAverageY;     										
+	tmp_var.varianceX  	= varX;     													// variance
+	tmp_var.varianceY  	= varY; 	
+	Serial.print("AVG  x: ");Serial.print(SensAverageX);Serial.print("  variance  x: ");Serial.println(varX);
+
+	Serial.print("OK   IMU");Serial.print(angleSensorNum);
+	return (tmp_var);																	// return structure
+}
+
+
+// ############  method "getfilteredAngleValues"
 
 Isensor AngleSens::getfilteredAngleValues	(int angleSensorNum)
 {
@@ -308,6 +415,7 @@ Isensor AngleSens::getDEMAfilteredAngleValues	(int angleSensorNum)
 		Z1ema_ema = EMA_function(EMAALPHA, Z1ema, Z1ema_ema);
 		Z1Dema = 2* Z1ema-Z1ema_ema;
 		zAng =  (Z1Dema  - ImuCAL[angleSensorNum].offsZ)/(ImuCAL[angleSensorNum].gainZ*IMUSCALE);
+		//Serial.print("\t");Serial.print(angleSensorNum);Serial.print("\t");Serial.print(tmpraw_A.aX);Serial.print("\t");Serial.print(tmpraw_A.aY);Serial.print("\t");Serial.println(tmpraw_A.aZ);
 	}
 	
 	else {																				// use filter#2 (tail & flap1)
@@ -325,6 +433,7 @@ Isensor AngleSens::getDEMAfilteredAngleValues	(int angleSensorNum)
 		Z2ema_ema = EMA_function(EMAALPHA, Z2ema, Z2ema_ema);
 		Z2Dema = 2* Z2ema-Z2ema_ema;
 		zAng =  (Z2Dema  - ImuCAL[angleSensorNum].offsZ)/(ImuCAL[angleSensorNum].gainZ*IMUSCALE);
+		//Serial.print("\t");Serial.print(angleSensorNum);Serial.print("\t");Serial.print(XAng);Serial.print("\t");Serial.print(YAng);Serial.print("\t");Serial.println(ZAng);
 	}
 	
 	// calc values
@@ -337,5 +446,9 @@ Isensor AngleSens::getDEMAfilteredAngleValues	(int angleSensorNum)
 	
 	return (tmp_imu);																	// return structure
 }
+
+
+
+
 
 #endif
