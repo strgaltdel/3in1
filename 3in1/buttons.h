@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	buttons.h															##
 ##  content:		definition of different button types & methods to get use of them	##
 ##  date:			2 Mar 2020															##
-##  rev.:			0.9																##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 	 

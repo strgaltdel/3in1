@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	cg_main.h															##
 ##  content:		main menue cg scale													##
 ##  date:			30 Jan 2020															##
-##  rev.:			0.7																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel																			##
 ##########################################################################################
 
@@ -69,8 +69,7 @@ void cg_main()
 	bool update_screen = true;
 	char strDummy[20];
 
-	int valueSize  = 5;							// char size of cg
-	int valueSize2 = 4;							// char size of weight
+
 
 
 	unsigned long startMillis = 0;  			// used to calculate lcd refresh
@@ -81,19 +80,32 @@ void cg_main()
 												// used to "overwrite" old values on screen without filling area black
 												// (performancewise):
 												
-	char old1[20], old2[20], old3[20], old4[20], old5[20], old6[20];
+	char old1[20] = " ";						// avoid foo fighters in first loop
+	char old2[20] = " ";
+	char old3[20], old4[20], old5[20], old6[20];
 	char new1[20], new2[20], new3[20], new4[20], new5[20], new6[20];
 
 	
+	int valueSize  = 5;						// char size of cg
+	int valueSize2 = 4;						// char size of weight
 	
-	int xCol1 = tWidth * 0.1;				// left disp column (values)
-	int xCol2 = tWidth * 0.57;				// right disp column (values)
+	int xCol1 = tWidth * 0.08;				// left disp column ( cg )
+	int xCol2 = tWidth * 0.55;				// right disp column (weight )
 	int xCol3 = tWidth * 0.4;				// center column (values)
 	int yLine1 = tHeight * 0.07;			// row1 ...
 	int yLine2 = tHeight * 0.2;
-	int yLine3 = yLine2  + (tHeight*0.06);
+	int yLine3 = yLine2  + (tHeight*0.09);
 	int val_xOffs1 = 20;
+	int val_xOffs2 = 0;
 	const int COLOUR2 = LIGHTGREY;
+	
+	#ifdef TESTRES							// could be used for more cg value resolution; not evaluated
+	 valueSize  = 5;						// char size of cg
+	 valueSize2 = 3;						// char size of weight
+	 xCol1 = tWidth * 0.02;					// left disp column ( cg )
+	 xCol2 = tWidth * 0.7;					// right disp column (weight )
+	 val_xOffs2 = -30;
+	#endif
 	
 	// define buttons for this screen
 	// row1
@@ -141,9 +153,12 @@ void cg_main()
 	dtostrf(cg,3,0,new1);				// center of gravity
 	dtostrf(totalWeight,4,0,new2);		// total weight
 	*/
-	dtostrf(cg * unit_factorLN,3,0,new1);								// center of gravity
+	#ifndef TESTRES
+	  dtostrf(cg * unit_factorLN,3,0,new1);				// center of gravity, int
+	#else
+  	  dtostrf(cg * unit_factorLN,5,1,new1);				// center of gravity, float(1dec)
+	#endif
 	dtostrf(totalWeight * unit_factorWG,4,0,new2);		// total weight
-
 
 	if (update_screen ) {	
 	// 	##################  static display  block   #############		
@@ -154,13 +169,13 @@ void cg_main()
 		}
 		
 		tft.drawBitmap(tWidth*0.18,tHeight*0.04,	CG, 	40, 40, VALUECOLOUR);
-		tft.drawBitmap(tWidth*0.7,tHeight*0.02,		LOAD, 	30, 50, COLOUR2);
+		tft.drawBitmap(tWidth*0.75,tHeight*0.02,	LOAD, 	30, 50, COLOUR2);
 		
 		tft.setTextColor(VALUECOLOUR);					// print new values	
 		tft.setTextSize(1);	
-		tft.setCursor(xCol1+tWidth*0.1,yLine2 );
+		tft.setCursor(xCol1+tWidth*0.1,yLine2 );		// unit cg
 		tft.println(unit_lenght2); 
-		tft.setCursor(xCol2+tWidth*0.15,yLine2 );
+		tft.setCursor(xCol2+tWidth*0.2 + val_xOffs2,yLine2 );		// unit weight
 		tft.println(unit_weight2); 
 
 		update_screen = false;
@@ -174,12 +189,12 @@ void cg_main()
 		tft.setTextColor(BACKGROUND);					// erase old values
 		tft.setTextSize(valueSize);
 		tft.setCursor(xCol1,yLine3 );
-		tft.println(old1); 
+		tft.println(old1); 								// cg
 		tft.setTextSize(valueSize2);
 		tft.setCursor(xCol2,yLine3 );
-		tft.println(old2); 
+		tft.println(old2); 								// weight
   
-		tft.setTextColor(VALUECOLOUR);					// print new values
+		tft.setTextColor(VALUECOLOUR2);					// print new values
 		tft.setTextSize(valueSize);
 		tft.setCursor(xCol1, yLine3);
 		tft.println(new1);
@@ -189,8 +204,12 @@ void cg_main()
 		tft.println(new2);
 	
 		// convert values into string
-		dtostrf(cg,3,0,old1);				// center of gravity
-		dtostrf(totalWeight,4,0,old2);		// total weight
+		#ifndef TESTRES
+		  dtostrf(cg * unit_factorLN,3,0,old1);				// center of gravity
+		#else
+		  dtostrf(cg * unit_factorLN,5,1,old1);	
+		#endif
+		dtostrf(totalWeight * unit_factorWG,4,0,old2);		// total weight
 		
 		// reset loop
 		startMillis = millis();

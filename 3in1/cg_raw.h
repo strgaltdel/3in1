@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	cg_raw.h															##
 ##  content:		show RAW cell loads													##
 ##  date:			14 Feb 2020															##
-##  rev.:			0.7																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
 

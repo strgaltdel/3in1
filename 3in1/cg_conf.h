@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	cg conf.h															##
 ##  content:		configure cg related parameters										##
 ##  date:			30 Jan 2020															##
-##  rev.:			0.7																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -260,6 +260,7 @@ int cg_conf()
 			break;
 
 		case 4:												// return to main menu
+			updateEEpromValues();	
 			confStatus=0;
 			delay(WAIT_RETURN);
 

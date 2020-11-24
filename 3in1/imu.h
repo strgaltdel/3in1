@@ -1,8 +1,8 @@
 /*
 - header file: 	imu.h
 - content:		definition of a class to obtain IMU data for Arduino
-- date:			19 Jan 2020
-- rev.:			0.9
+- date:			15. Nov 2020
+- rev.:			1.0
 by strgaltdel
 
 class AngleSens:
@@ -129,8 +129,8 @@ int EMA_function(float alpha, int latest, int stored){						// ema function
 void getImuCalValues(int num){
 
   if(READ_EEPROM) {  
-	  Serial.println("get eeprom cal data");
-  //Eeprom::getIMUValues(num);
+	Serial.println("get eeprom cal data");
+	Eeprom::getIMUValues(num);
   }
   else {
 	 Serial.println("get coded cal data");
@@ -306,7 +306,7 @@ SensVar AngleSens::calcVariance	(int angleSensorNum)
 	SensVar tmp_var;																	// declare structure
 	RawAsensor tmpraw_A;																// raw data used in this run
 
-	int 	avgLoops = 700;															// number of loops to build average
+	int 	avgLoops = 700;																// number of loops to build average
 	int 	measLoops = 1500;															// number of loops to eval variance
 	int32_t SensAverageX = 0;
 	int32_t SensAverageY = 0;

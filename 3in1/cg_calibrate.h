@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	cg_calibrate.h														##
 ##  content:		calibrate hx711 cells												##
 ##  date:			20 Feb 2020															##
-##  rev.:			0.8																	##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -36,10 +36,9 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 
 int cg_Calibrate(){
 
-  static int step = 0;
- //static float calibrationWeight=798;		//ref weight for test purpose
-  static long cellEmpty;
-  static long cellWeighted;
+  int step = 0;
+  long cellEmpty;
+  long cellWeighted;
   
   
   int handler = MAIN_ID;
@@ -50,7 +49,7 @@ int cg_Calibrate(){
   int yLine2 = tHeight * 0.15;
   int yLine3 = tHeight * 0.3;
   int xLine  = tWidth * 0.0;
-  int numMeasurements = 200;
+  int numMeasurements = 300;
   tft.setTextSize(sizeHeader);
   
   
@@ -119,7 +118,7 @@ int cg_Calibrate(){
 				tft.setTextColor(GREEN);
 				tft.setCursor(xLine, yLine3 );
 				tft.println(str_CGtara);
-				delay(500);
+				delay(1000);
 				step++;
 				status = WORKING;
 				cellEmpty = frontCell.read_average(CELL_SAMPLE_ITERATIONS * numMeasurements);		// read empty front cell & built average
@@ -144,7 +143,7 @@ int cg_Calibrate(){
 				tft.setTextColor(GREEN);
 				tft.setCursor(xLine, yLine3 );
 				tft.println(str_CGcal1c);
-				delay(500);
+				delay(1000);
 				status = WORKING;
 				cellWeighted = frontCell.read_average(CELL_SAMPLE_ITERATIONS * numMeasurements);
 				eepromValues.frontScale = (cellWeighted - cellEmpty) / eepromValues.calibrationWeight;
@@ -174,6 +173,7 @@ int cg_Calibrate(){
 				tft.setTextColor(GREEN);
 				tft.setCursor(xLine, yLine3 );
 				tft.println(str_CGtara);
+				delay(1000);
         		cellEmpty = rearCell.read_average(CELL_SAMPLE_ITERATIONS * numMeasurements);
 				step++;
 				status = WORKING;
@@ -202,6 +202,7 @@ int cg_Calibrate(){
 				tft.setTextColor(GREEN);
 				tft.setCursor(xLine, yLine3 );
 				tft.println(str_CGcal2c);
+				delay(1000);
 				status = WORKING;
 				cellWeighted = rearCell.read_average(CELL_SAMPLE_ITERATIONS * numMeasurements);
         		eepromValues.rearScale = (cellWeighted - cellEmpty) / eepromValues.calibrationWeight;

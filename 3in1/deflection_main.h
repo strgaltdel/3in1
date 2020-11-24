@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	deflection_main.h													##
 ##  content:		read IMU deflection values and display data on screen				##
 ##  date:			20.Feb 2020															##
-##  rev.:			0.7																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -236,7 +236,8 @@ void deflection()
 			tft.setCursor(but_sub[1].xpos+tWidth*0.01, but_sub[1].ypos -tHeight*0.04);
 			tft.println("mod.THROW");
 			tft.fillRect(but_sub[1].xpos, but_sub[1].ypos -tHeight*0.17, 30,40,BACKGROUND);
-			tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan, 40, 30);
+			if(SWAP_RB) {tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan2, 40, 30);}	// red<>blue swapperd
+			else		{tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan , 40, 30);}
 		}
 		else {
 			tft.setTextColor(BACKGROUND);
@@ -434,7 +435,8 @@ void deflection()
 				tft.setCursor(but_sub[1].xpos+tWidth*0.01, but_sub[1].ypos -tHeight*0.04);
 				tft.println("mod.THROW");
 				tft.fillRect(but_sub[1].xpos, but_sub[1].ypos -tHeight*0.17, 30,40,BACKGROUND);
-				tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan, 40, 30);
+				if(SWAP_RB) {tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan2, 40, 30);}	// red<>blue swapperd
+				else		{tft.drawRGBBitmap(but_sub[1].xpos+tWidth*0.05, but_sub[1].ypos -tHeight*0.15, bmp_tan , 40, 30);}
 				eepromValues.TanSecOption=0;
 			}
 			Eeprom::putFlapValues();													// save new "throw<>sekant flag"
@@ -450,6 +452,10 @@ void deflection()
 			break;
 		case 3:								// set flapdepth
 			handler = setflap();
+			/* debug eeprom values instead setflap:
+				SprintIMUValues();
+				Serial.print("offsX:  \t");Serial.println(ImuCAL[3].offsX);
+			*/
 			update_screen = true;
 			break;
 

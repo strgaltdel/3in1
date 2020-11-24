@@ -11,7 +11,7 @@
 #######																		#######
 #######																		#######
 #######	 Rev 1.00															#######
-#######	 02 Mar 2020															#######
+#######	 02 DEC 2020														#######
 #######	 by strgaltdel														#######
 ###################################################################################
 
@@ -30,7 +30,7 @@
 	
 *************************************************************************************/
 
-
+#define INTRO
 #define MAIN_ID 999
 bool mainRefStatus = true;									// 1 = refresh screen
 
@@ -44,6 +44,7 @@ void setup() {
   bool hx711Status = false;	
 	
   Serial.begin(115200);
+  /*
   eepromValues = Eeprom::getValues();						// get eeprom values
   
 															// init units
@@ -63,9 +64,10 @@ void setup() {
 				unit_weight2 = str_ounce2;
 				unit_factorWG = 0.035274;	
 		}														
-  
+  */
+  updateEEpromValues();										// get eeprom values
   tftinit();											  	// init tft
-  Serial.println("Rev 0.81  Feb 2020");
+  Serial.println("Rev 1.00  2.Dec 2020");
   
   frontCell.begin(FRONT_CELL_DOUT, FRONT_CELL_SCK);  		// init load cells (ADA)
 
@@ -105,12 +107,23 @@ void setup() {
   
 }
 
+void dispHeader() {
 
+	tft.setTextSize(4);					
+	tft.setTextColor(WHITE);
+	tft.setCursor(tWidth*0.5 -45, tHeight*0.04);
+	tft.println("3in1");
+				
+	tft.setTextSize(1);	
+	tft.setTextColor(CYAN);
+	tft.setCursor(tWidth*0.5-58, tHeight*0.16);
+	tft.println("Rev 1.0 by NOWAtec");
+}
 
 void loop() {
 
 	int i, handler;									// handler is used to control menue options
-	Button  but[3];									// some buttons have to be used in this menue
+	Button  but[6];									// some buttons have to be used in this menue
 	int numButtons = 2;								// number of buttons on this screen, starting with 0
 	
 	// description of buttons:
@@ -125,17 +138,39 @@ void loop() {
 	but[1] = {BUT_XXL, BUTCOLOUR, 	str_EWDSCALE, 	BUTTXTCOLOUR, 30, 170};	
 	but[2] = {BUT_XXL, BUTCOLOUR, 	str_DEFLSCALE, 	BUTTXTCOLOUR, 30, 240};
 	
+	but[3] = {BUT_XXL, BUTCOLOUR, 	str_Intro_1, 	BUTTXTCOLOUR, 30, 100};	
+	but[4] = {BUT_XXL, BUTCOLOUR, 	str_Intro_2, 	BUTTXTCOLOUR, 30, 170};	
+	but[5] = {BUT_XXL, BUTCOLOUR, 	str_Intro_3, 	BUTTXTCOLOUR, 30, 240};
 	
 
+
+	
+	
 
 	// draw Buttons 		************
 
 	if (mainRefStatus == true) {
 	  tft.fillScreen(BACKGROUND);
+	  if (introFlag) {
+	  // intro
+	    #ifdef INTRO
+		DrawButton(but[3]);
+		delay(1600);		
+		tft.fillRect(0,100,tWidth,55, BLACK);
+		DrawButton(but[4]);
+		delay(1600);		
+		tft.fillRect(0,170,tWidth,55, BLACK);
+		DrawButton(but[5]);
+		delay(1600);
+		introFlag=false;
+	    #endif 
+	  }
+	  
 	  for (i=0; i<=2; i++) {
 		DrawButton(but[i]);
 	  }
 	  mainRefStatus = false;			// at this moment no screen refresh needed
+	  dispHeader();
 	}
 	
 	handler = MAIN_ID;				// init handler

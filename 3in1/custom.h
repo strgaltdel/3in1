@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	custom.h															##
 ##  content:		customizing like colours, timings, debug status...					##
-##  date:			12 Jan 2020															##
-##  rev.:			0.7																	##
+##  date:			12 Nov 2020															##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -33,8 +33,12 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 
 // debug purpose
 #define DEBUG 					// print debug infos
+#define PROTO					// Prototype pcb
+
 //#define DEBUG_coord 			// DRAW COORD
 //#define PRINT_TOUCH_COORD		// print touched coordinates
+
+bool introFlag = true;			// intro yes/no
 
 //  ###############     global
 #define READ_EEPROM true				// set true if reading IMU-CALIBRATION values from Eeprom ; else false
@@ -45,6 +49,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 
 #define BACKGROUND 		BLACK			// background colour
 #define VALUECOLOUR 	WHITE			// datavalue colour
+#define VALUECOLOUR2 	GREEN			// datavalue colour
 
 #define BUTCOLOUR		LIGHTGREY		// button colour
 #define BUTTXTCOLOUR	WHITE			// button text colour
@@ -71,13 +76,23 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 
 
 // load cells config
-#define CELL_SAMPLE_ITERATIONS 20
+#define CELL_SAMPLE_ITERATIONS 20		// "one time" read
+
+
+#ifdef PROTO
+// prototype pcb
 #define FRONT_CELL_DOUT 51
 #define FRONT_CELL_SCK 49
 #define REAR_CELL_DOUT 47
 #define REAR_CELL_SCK 45
+#endif
 
-
+#ifndef PROTO
+#define FRONT_CELL_DOUT 47
+#define FRONT_CELL_SCK 45
+#define REAR_CELL_DOUT 43
+#define REAR_CELL_SCK 41
+#endif
 
 String unit_lenght = "mm";
 String unit_lenght2 = " (mm)";

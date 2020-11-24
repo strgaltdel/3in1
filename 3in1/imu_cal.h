@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	imu_cal.h															##
 ##  content:		calibration of imu													##
 ##  date:			12 Jan 2020															##
-##  rev.:			0.9																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel 																		##
 ##########################################################################################
 
@@ -104,7 +104,7 @@ void getImuCalData(int IMUnum)															// input: IMU number
 
 
 void dispImuOffs(int16_t imu_offs){
-	if (abs(imu_offs) < IMUSCALE*0.08) tft.setTextColor(GREEN);
+	if (abs(imu_offs) < IMUSCALE*0.18) tft.setTextColor(GREEN);							// uncritical offset if within xx-percent of range
 	else {tft.setTextColor(RED);}		
 	tft.println(imu_offs);
 	tft.setTextColor(VALUECOLOUR);
@@ -191,7 +191,7 @@ int deflection_cal(int imucal_num)
 	int i, handler2;
 	int deflCalStatus = 1;
 	bool update_buttons = true;
-	int counter;
+	int counter = 0;
 	
 	// define buttons for this routine
 
@@ -238,6 +238,7 @@ int deflection_cal(int imucal_num)
 				deflCalStatus=0;
 				Eeprom::putIMUValues(ImuCAL[imucal_num],imucal_num);
 				delay(WAIT_RETURN);
+				SprintIMUValues();
 				handler2 = 999;
 				break;	
 		}

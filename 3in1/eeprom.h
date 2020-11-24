@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	eeprom.h															##
 ##  content:		save customized values into EEprom; define std values &addresses..	##
 ##  date:			20 Feb 2020															##
-##  rev.:			0.8																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel with special thanks to ds beach, code was inspired from his work		##
 ##########################################################################################
 
@@ -40,6 +40,8 @@ putFlapValues	();
 #ifndef EEPROM_H
 #define EEPROM_H
  
+// int 		>> 2 bytes
+// float	>> 4 bytes
 
 
 #define FRONT_SCALE_ADDRESS 		0
@@ -155,6 +157,13 @@ struct EepromValues {
   float IMU5_GAINZ;
   uint32_t TanSecOption;
 };
+
+
+
+
+
+
+
 
 EepromValues eepromValues;
 
@@ -315,7 +324,8 @@ EepromValues Eeprom::getValues()
 	if (isnan(eepromValues.IMU5_GAINX) || eepromValues.IMU5_GAINX == 0.0) { eepromValues.IMU5_GAINX = 1.0; }
 	if (isnan(eepromValues.IMU5_GAINY) || eepromValues.IMU5_GAINY == 0.0) { eepromValues.IMU5_GAINY = 1.0; }
 	if (isnan(eepromValues.IMU5_GAINZ) || eepromValues.IMU5_GAINZ == 0.0) { eepromValues.IMU5_GAINZ = 1.0; }
-    
+
+	#ifdef DEBUG
 	Serial.println();
 	Serial.println("Reading EEPROM");
 	Serial.println("--------------");
@@ -335,49 +345,13 @@ EepromValues Eeprom::getValues()
 	Serial.print("V-Tail");Serial.print("\t\t");Serial.print(eepromValues.IMU3_OFFSX);Serial.print("\t");Serial.print(eepromValues.IMU3_OFFSY);Serial.print("\t");Serial.print(eepromValues.IMU3_OFFSZ);Serial.print("\t");Serial.print(eepromValues.IMU3_GAINX);Serial.print("\t");Serial.print(eepromValues.IMU3_GAINY);Serial.print("\t");Serial.println(eepromValues.IMU3_GAINZ);
 	Serial.print("Flap0");Serial.print("\t\t");Serial.print(eepromValues.IMU4_OFFSX);Serial.print("\t");Serial.print(eepromValues.IMU4_OFFSY);Serial.print("\t");Serial.print(eepromValues.IMU4_OFFSZ);Serial.print("\t");Serial.print(eepromValues.IMU4_GAINX);Serial.print("\t");Serial.print(eepromValues.IMU4_GAINY);Serial.print("\t");Serial.println(eepromValues.IMU4_GAINZ);
 	Serial.print("Flap1");Serial.print("\t\t");Serial.print(eepromValues.IMU5_OFFSX);Serial.print("\t");Serial.print(eepromValues.IMU5_OFFSY);Serial.print("\t");Serial.print(eepromValues.IMU5_OFFSZ);Serial.print("\t");Serial.print(eepromValues.IMU5_GAINX);Serial.print("\t");Serial.print(eepromValues.IMU5_GAINY);Serial.print("\t");Serial.println(eepromValues.IMU5_GAINZ);
+	#endif
 
-	
 	
 	
 	//	Serial.print("Tail\t" +	String(eepromValues.IMU2_OFFSX) + "\t"+ String(eepromValues.IMU1_OFFSY) + "\t"+ String(eepromValues.IMU1_OFFSZ)  + "\t" +	String(eepromValues.IMU2_GAINX) + "\t"+ String(eepromValues.IMU1_GAINY) + "\t"+ String(eepromValues.IMU1_GAINZ));
 	
-	/*
-	Serial.println("IMU1 (Wing):");
-	Serial.println("X Offset: \t"+ String(eepromValues.IMU1_OFFSX));
-	Serial.println("Y Offset: \t"+ String(eepromValues.IMU1_OFFSY));
-	Serial.println("Z Offset: \t"+ String(eepromValues.IMU1_OFFSZ));
-	Serial.println("X GAIN: \t"+ String(eepromValues.IMU1_GAINX));
-	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU1_GAINY));
-	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU1_GAINZ));
-	Serial.println("IMU2 (Tail):");
-	Serial.println("X Offset: \t"+ String(eepromValues.IMU2_OFFSX));
-	Serial.println("Y Offset: \t"+ String(eepromValues.IMU2_OFFSY));
-	Serial.println("Z Offset: \t"+ String(eepromValues.IMU2_OFFSZ));
-	Serial.println("X GAIN: \t"+ String(eepromValues.IMU2_GAINX));
-	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU2_GAINY));
-	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU2_GAINZ));
-	Serial.println("IMU3 (V-tail):");
-	Serial.println("X Offset: \t"+ String(eepromValues.IMU3_OFFSX));
-	Serial.println("Y Offset: \t"+ String(eepromValues.IMU3_OFFSY));
-	Serial.println("Z Offset: \t"+ String(eepromValues.IMU3_OFFSZ));
-	Serial.println("X GAIN: \t"+ String(eepromValues.IMU3_GAINX));
-	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU3_GAINY));
-	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU3_GAINZ));	
-	Serial.println("IMU4 (Deflection1):");
-	Serial.println("X Offset: \t"+ String(eepromValues.IMU4_OFFSX));
-	Serial.println("Y Offset: \t"+ String(eepromValues.IMU4_OFFSY));
-	Serial.println("Z Offset: \t"+ String(eepromValues.IMU4_OFFSZ));
-	Serial.println("X GAIN: \t"+ String(eepromValues.IMU4_GAINX));
-	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU4_GAINY));
-	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU4_GAINZ));		
-	Serial.println("IMU5 (Deflection2):");
-	Serial.println("X Offset: \t"+ String(eepromValues.IMU5_OFFSX));
-	Serial.println("Y Offset: \t"+ String(eepromValues.IMU5_OFFSY));
-	Serial.println("Z Offset: \t"+ String(eepromValues.IMU5_OFFSZ));
-	Serial.println("X GAIN: \t"+ String(eepromValues.IMU5_GAINX));
-	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU5_GAINY));
-	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU5_GAINZ));			
-  */
+
   return eepromValues;  
 }  
 
@@ -440,9 +414,14 @@ void Eeprom::putCGValues()
     EEPROM.put(PEG_DISTANCE_ADDRESS, eepromValues.pegDistance);
     EEPROM.put(METRIC_IMP_OPTION_ADDRESS, eepromValues.metricImpOption);
 	EEPROM.put(FLAPWIDTH_ADDRESS, eepromValues.flapwidth);
-	Serial.println("wrote span dist   ");Serial.println(eepromValues.spanDistance);
-	EEPROM.get(SPAN_DISTANCE_ADDRESS, eepromValues.spanDistance);
-	Serial.println("got span dist     ");Serial.println(eepromValues.spanDistance);
+	#ifdef DEBUG
+	  Serial.println("WROTE CG Eeprom Values");
+      Serial.println("Front scale: \t" + String(eepromValues.frontScale));
+      Serial.println("Rear scale: \t" + String(eepromValues.rearScale));
+      Serial.println("Cal. weight: \t" + String(eepromValues.calibrationWeight));
+      Serial.print("Span distance: \t");Serial.println(eepromValues.spanDistance);
+      Serial.println("Peg distance: \t" + String(eepromValues.pegDistance));
+	#endif
 
 }
 
@@ -555,3 +534,68 @@ void Eeprom::putFlapValues()
     EEPROM.put(FLAPWIDTH_ADDRESS, eepromValues.flapwidth);
 	EEPROM.put(TAN_SEC_OPTION_ADDRESS, eepromValues.TanSecOption);
 }
+
+void SprintIMUValues(){
+	eepromValues = Eeprom::getValues();						// get eeprom values
+	
+	Serial.println("IMU1 (Wing):");
+	Serial.println("X Offset: \t"+ String(eepromValues.IMU1_OFFSX));
+	Serial.println("Y Offset: \t"+ String(eepromValues.IMU1_OFFSY));
+	Serial.println("Z Offset: \t"+ String(eepromValues.IMU1_OFFSZ));
+	Serial.println("X GAIN: \t"+ String(eepromValues.IMU1_GAINX));
+	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU1_GAINY));
+	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU1_GAINZ));
+	Serial.println("IMU2 (Tail):");
+	Serial.println("X Offset: \t"+ String(eepromValues.IMU2_OFFSX));
+	Serial.println("Y Offset: \t"+ String(eepromValues.IMU2_OFFSY));
+	Serial.println("Z Offset: \t"+ String(eepromValues.IMU2_OFFSZ));
+	Serial.println("X GAIN: \t"+ String(eepromValues.IMU2_GAINX));
+	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU2_GAINY));
+	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU2_GAINZ));
+	Serial.println("IMU3 (V-tail):");
+	Serial.println("X Offset: \t"+ String(eepromValues.IMU3_OFFSX));
+	Serial.println("Y Offset: \t"+ String(eepromValues.IMU3_OFFSY));
+	Serial.println("Z Offset: \t"+ String(eepromValues.IMU3_OFFSZ));
+	Serial.println("X GAIN: \t"+ String(eepromValues.IMU3_GAINX));
+	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU3_GAINY));
+	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU3_GAINZ));	
+	Serial.println("IMU4 (Deflection1):");
+	Serial.println("X Offset: \t"+ String(eepromValues.IMU4_OFFSX));
+	Serial.println("Y Offset: \t"+ String(eepromValues.IMU4_OFFSY));
+	Serial.println("Z Offset: \t"+ String(eepromValues.IMU4_OFFSZ));
+	Serial.println("X GAIN: \t"+ String(eepromValues.IMU4_GAINX));
+	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU4_GAINY));
+	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU4_GAINZ));		
+	Serial.println("IMU5 (Deflection2):");
+	Serial.println("X Offset: \t"+ String(eepromValues.IMU5_OFFSX));
+	Serial.println("Y Offset: \t"+ String(eepromValues.IMU5_OFFSY));
+	Serial.println("Z Offset: \t"+ String(eepromValues.IMU5_OFFSZ));
+	Serial.println("X GAIN: \t"+ String(eepromValues.IMU5_GAINX));
+	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU5_GAINY));
+	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU5_GAINZ));			
+  	
+}
+
+void updateEEpromValues(){
+  eepromValues = Eeprom::getValues();						// get eeprom values
+  /*
+															// init units
+  if (eepromValues.metricImpOption == 0) {					// metric:												
+				unit_lenght = str_mm;
+				unit_lenght2 = str_mm2;
+				unit_factorLN = 1.00;						
+				unit_weight = str_g;
+				unit_weight2 = str_g2;
+				unit_factorWG = 1.0;	
+		}
+  else {													// imperial		
+				unit_lenght = str_inch;
+				unit_lenght2 = str_inch2;
+				unit_factorLN = 1.0/25.4;					
+				unit_weight = str_ounce;
+				unit_weight2 = str_ounce2;
+				unit_factorWG = 0.035274;	
+		}	
+	*/
+}	
+

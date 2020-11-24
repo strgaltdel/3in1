@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	language.h															##
 ##  content:		language specific strings											##
 ##  date:			12 Jan 2020															##
-##  rev.:			0.9																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel 																		##
 ##########################################################################################
 
@@ -102,6 +102,11 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 #define str_stab			"  LTW"
 #define str_stabStd			" std.Ltw"
 #define str_stabV			" V - Ltw"
+
+//intro
+#define str_Intro_1			"  Salmei"
+#define str_Intro_2			"  Dalmei"
+#define str_Intro_3			"  Adomei"
 
 #define str_mm				"mm"
 #define str_mm2				" (mm)"

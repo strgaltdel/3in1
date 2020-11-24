@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	numpad.h															##
 ##  content:		numpad to enter custom values like distances, reference weight ..	##
 ##  date:			29 Feb 2020															##
-##  rev.:			0.9																##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 

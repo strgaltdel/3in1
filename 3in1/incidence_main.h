@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	incidence_main.h													##
 ##  content:		read IMU incidence values from wing & elevator and and print data	##
 ##  date:			23 Jan 2020															##
-##  rev.:			0.7																	##
+##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -158,8 +158,12 @@ void incidence()
 												// float to char dummies (dtostrf)
 												// used to "overwrite" old values on screen without filling area black
 												// (performancewise):
-												
-	char old1[20], old2[20], old3[20], old4[20], old5[20], old6[20];
+
+	char old1[20] = " ";						// avoid foo fighters in first loop
+	char old2[20] = " ";
+	char old5[20] = " ";	
+	
+	char old3[20], old4[20], old6[20];
 	char new1[20], new2[20], new3[20], new4[20], new5[20], new6[20];
 
 	

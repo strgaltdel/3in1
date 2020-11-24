@@ -6,7 +6,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##  header file: 	deflection_flap.h													##
 ##  content:		set flapwidt by using a "slider" and save value in EEprom			##
 ##  date:			02 Mar 2020															##
-##  rev.:			0.9																	##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -48,15 +48,15 @@ int setflap()
 	// define buttons for this routine
 	but_sub[0] = {BUT_XL, 	GREEN, 		str_OK3, 		BUTTXTCOLOUR, tWidth*0.02, 	tHeight -  button[BUT_XL][0]-3};
 	
-	float lineLenght = tHeight * 0.82;			// size of slider
+	float lineLenght = tHeight * 0.75;			// size of slider
 	int lineColour = VALUECOLOUR;
 	int lineThickness = 3;
 	
-	float Ystart = (tHeight-lineLenght)/2	;	// y coord of graph
+	float Ystart = 5 + (tHeight-lineLenght)/2;	// y coord of graph
 	float Xstart = tWidth * 0.82;				// X coord of graph
 	
-	float flapMin = 10* unit_factorLN;			// minimal flapsize (mm)
-	float flapMax = 60* unit_factorLN;			// maximal flapsize
+	float flapMin = 15* unit_factorLN;			// minimal flapsize (mm)
+	float flapMax = 66* unit_factorLN;			// maximal flapsize
 	float separator = 10* unit_factorLN;		// separators every x mm
 	int separatorTH = 3;						// thickness od separators
 
@@ -111,7 +111,7 @@ int setflap()
 			tft.setCursor(tmp1,tmp2);
 			
 			if (eepromValues.metricImpOption == 0) {											// metric:
-				flap = flapMin + ((marker-Ystart)/(lineLenght/(flapMax-flapMin)))+0.5;			// calc flapvalue from touched y pos
+				flap = flapMin + ((marker-Ystart)/(lineLenght/(flapMax-flapMin)));			// calc flapvalue from touched y pos
 				tft.print(flap,0);
 				}
 			else {																				// imperial

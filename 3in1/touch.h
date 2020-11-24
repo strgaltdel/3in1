@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	touch.h																##
 ##  content:		touch related functions (init, checkpressed, checkArea )			##
-##  date:			3 Feb 2020															##
-##  rev.:			0.7																	##
+##  date:			3 Nov 2020															##
+##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -49,14 +49,22 @@ void tftinit() {
 
   tft.reset();
   uint16_t identifier = tft.readID();
-  tft.begin(identifier);
+  
+  
+  tft.begin(TFT_IDENTIFIER);
   tft.setRotation(TFTMODE); 
- 
+  tft.invertDisplay(TFTCOLORINVERT);
+  Serial.print("init TFT type: \t"); Serial.print(TFTTYPE); Serial.print("\t\t\t");Serial.println(TFT_IDENTIFIER,HEX);
+  #ifdef DEBUG
+	if(identifier==0x0) {Serial.println("WARNING:  TFT may produce problems due to no identifoer !");}
+  #endif
   #ifndef TFT_SIZE
    #define TFT_SIZE
    tHeight = tft.height() - 1; //portrait;
    tWidth = tft.width();
   #endif
+   tHeight = 318; //portrait;
+   tWidth = 239;
   //Background colour
   tft.fillScreen(BACKGROUND);
 
@@ -75,15 +83,17 @@ void tftinit() {
   digitalWrite(13, HIGH);
   TSPoint p = ts.getPoint();
   digitalWrite(13, LOW);
+ // Serial.print("touch: \t");Serial.print(p.x);Serial.print(" \t");Serial.println(p.y);
 
   //If sharing pins, you'll need to fix the directions of the touchscreen pins
   pinMode(XM, OUTPUT);
   pinMode(YP, OUTPUT);
 
   // Touch coord.mapping
-  
+
   if (TFTMODE == 0)				// look in lcd_config.h for actual mode
   {
+	  
   //portrait
 	Touch_X = map(p.x, TS_MAXX, TS_MINX, 0, tft.width());
 	Touch_Y = tft.height()- map(p.y, TS_MAXY, TS_MINY, 0, tft.height());
@@ -95,11 +105,14 @@ void tftinit() {
 	Touch_Y = tft.height()- map(p.x, TS_MAXX, TS_MINX, 0, tft.height());
   }
   Touch_Z = p.z;
+  
+  if(TOUCH_SWAPy) {Touch_Y = tft.height()-Touch_Y;}
 
   // now we have the coordinates and can check;
   // at the end: print touched coordinates	
   
   if (Touch_Z > 30) {
+	  Serial.print("touch: \t");Serial.print(p.x);Serial.print(" \t");Serial.println(p.y);   // active line in case you want to see raw touch coordinates
 		return true;
 	}
   return false;
@@ -134,9 +147,10 @@ void tftinit() {
 
   // now we have the coordinates and can check;
   // at the end: print touched coordinates	
+  if(TOUCH_SWAPy) {Touch_Y = tft.height()-Touch_Y;}
   
   if (Touch_Z > 30) {
-	  Serial.print("touch: \t");Serial.print(Touch_X);Serial.print(" \t");Serial.println(Touch_Y);
+	//  Serial.print("touchb: \t");Serial.print(Touch_X);Serial.print(" \t");Serial.println(Touch_Y);
 		if ( (Touch_X > X1) && (Touch_X < (X1 + XWidth)) && (Touch_Y > Y1) && (Touch_Y < (Y1 + YLenght))) {
 			return true;
 		}
