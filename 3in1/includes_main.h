@@ -69,7 +69,7 @@ HX711 rearCell;
 #include "bitmaps_3in1.h"	
 #include "buttons.h"			// buttons class										## app coding
 
-#include "screenServer.h"		// upload screens into processing client
+//#include "screenServer.h"		// upload screens into processing client
 
 #include "numpad.h"				// menue numpad											## app coding
 #include "cg_main.h"			// menue cg scale										## app coding

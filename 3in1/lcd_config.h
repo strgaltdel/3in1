@@ -30,7 +30,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 #ifndef LCDCONFIG_H
 #define LCDCONFIG_H
 
-#define TFTTYPE 0
+#define TFTTYPE 2
 
 //#define TFTTYPE 0  	// 0= MCU68090,white dampener, 	black pins	, "mcufriend" print, 		read-id =0x6809, no voltage reg
 //#define TFTTYPE 1		// 1= ILI9329,black dampener, 	black pins 	, "mcufriend" print, 		read-id =0x0, no voltage reg, id 0xE300 ??

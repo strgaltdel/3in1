@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	cg_calibrate.h														##
 ##  content:		calibrate hx711 cells												##
-##  date:			20 Feb 2020															##
-##  rev.:			1.0																##
+##  date:			20 Nov 2020															##
+##  rev.:			1.01																##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -26,6 +26,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 	
 ***************************************************************************************/
 
+
+//  1.0 	initial
 
 
 #ifndef CG_CALIBRATE

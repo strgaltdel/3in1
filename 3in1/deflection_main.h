@@ -5,7 +5,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	deflection_main.h													##
 ##  content:		read IMU deflection values and display data on screen				##
-##  date:			20.Feb 2020															##
+##  date:			21.Nov 2020															##
 ##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
@@ -60,7 +60,7 @@ float rad2;										// rad imu1
 
 #endif											
 
-
+#define DIFF_OK	0.65							// angle difference between Flaps which is OK 
 
 /*************************************************************************************/
 /*****************    	selection which IMU should be calibrated           ***********/
@@ -365,7 +365,7 @@ void deflection()
 		tft.setCursor(val_center, val_row3 );						// angle imu1-imu2
 		tft.println(old5);
 
-		if (abs(angle1 - relative1 - angle2 + relative2) < 0.3) {
+		if (abs(angle1 - relative1 - angle2 + relative2) < DIFF_OK) {	// small angle diff ? >> green
 			tft.setTextColor(GREEN);
 		}
 		else {tft.setTextColor(VALUECOLOUR);}

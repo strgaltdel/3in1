@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	cg conf.h															##
 ##  content:		configure cg related parameters										##
-##  date:			30 Jan 2020															##
-##  rev.:			1.0																	##
+##  date:			20 Nov 2020															##
+##  rev.:			1.01																	##
 ##  by strgaltdel																		##
 ##########################################################################################
 
@@ -26,6 +26,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 	
 *************************************************************************************/
 
+
+//	1.01	cg scale: SpanDist & PegDist.:  int>>float   (2020 Nov)
 
 #ifndef CG_conf_H
 #define CG_conf_H
@@ -208,7 +210,8 @@ int cg_conf()
 	switch (handler)
 	{
 		case 0:								// set span
-			eepromValues.spanDistance = (int)(NumPad(str_CG_span, String(str_unit) + " in " + unit_lenght,3 ) / unit_factorLN + 0.5);	// get new value from numpad,
+			eepromValues.spanDistance = (float)(NumPad(str_CG_span, String(str_unit) + " in " + unit_lenght,3 ) / unit_factorLN  );		// get new value from numpad,
+//			eepromValues.spanDistance = (int)(NumPad(str_CG_span, String(str_unit) + " in " + unit_lenght,3 ) / unit_factorLN + 0.5);	// get new value from numpad,
 																																		// recalc in case of imperial
 																																		// 3 = how many digits without decimals																											
 			Eeprom::putCGValues();																										// write (cg related) value into eeprom
@@ -219,14 +222,15 @@ int cg_conf()
 
 			break;
 		case 1:												// set peg
-			eepromValues.pegDistance = (int)(NumPad(str_CG_peg,  String(str_unit) + " in " + unit_lenght,3) / unit_factorLN + 0.5);		// get new value from numpad, typecast in case of imperial
+			eepromValues.pegDistance = (float)(NumPad(str_CG_peg,  String(str_unit) + " in " + unit_lenght,3) / unit_factorLN );		// get new value from numpad, typecast in case of imperial
+//			eepromValues.spanDistance = (int)(NumPad(str_CG_span, String(str_unit) + " in " + unit_lenght,3 ) / unit_factorLN  0.5);	// get new value from numpad,
 			Eeprom::putCGValues();																										// write (cg related) value into eeprom
 			update_screen = true;																										// flag screen for update
 
 			break;
 
 		case 2:												// reference weight
-			eepromValues.calibrationWeight = (int)(NumPad(str_CG_weight,  String(str_unit) + " in " + unit_weight,4) / unit_factorWG + 0.5);	// get new value from numpad, typecast in case of imperial
+			eepromValues.calibrationWeight = (int)(NumPad(str_CG_weight,  String(str_unit) + " in " + unit_weight,4) / unit_factorWG );	// get new value from numpad, typecast in case of imperial
 			Eeprom::putCGValues();																												// write (cg related) value into eeprom
 			update_screen = true;		
 			break;

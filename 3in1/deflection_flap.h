@@ -53,7 +53,7 @@ int setflap()
 	int lineThickness = 3;
 	
 	float Ystart = 5 + (tHeight-lineLenght)/2;	// y coord of graph
-	float Xstart = tWidth * 0.82;				// X coord of graph
+	float Xstart = tWidth * 0.8;				// X coord of graph
 	
 	float flapMin = 15* unit_factorLN;			// minimal flapsize (mm)
 	float flapMax = 66* unit_factorLN;			// maximal flapsize
@@ -148,7 +148,7 @@ int setflap()
 			for (i=0; i <= (flapMax-flapMin)/separator; i++){
 				yy =  Ystart + i*(lineLenght/((flapMax-flapMin)/separator));
 				tft.drawFastHLine(Xstart, yy , tWidth * 0.05, lineColour); 			// sep lines
-				tft.setCursor(Xstart + tWidth * 0.1, yy );
+				tft.setCursor(Xstart + tWidth * 0.1, yy );							// set cursor for flap depth values
 				tft.setTextSize(1);
 				tft.setTextColor(lineColour);
 				if (eepromValues.metricImpOption == 0) {							// sep values metric:

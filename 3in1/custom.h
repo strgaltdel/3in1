@@ -5,7 +5,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	custom.h															##
 ##  content:		customizing like colours, timings, debug status...					##
-##  date:			12 Nov 2020															##
+##  date:			25 Nov 2020															##
 ##  rev.:			1.0																##
 ##  by strgaltdel																		##
 ##########################################################################################
@@ -65,8 +65,9 @@ bool introFlag = true;			// intro yes/no
 #define DEFL_REFRESHRATE 900     		// routine deflection: 	lcd refresh rate (milliseconds)
 #define DEFL_AVERAGETIME 895			// routine deflection: 	time to built arithm. average (ms)
 
-#define INC_REFRESHRATE 1400     		// routine deflection: 	lcd refresh rate (milliseconds)
-#define INC_AVERAGETIME 1395			// routine deflection: 	time to built arithm. average (ms)
+//  ###############     incidence meter
+#define INC_REFRESHRATE 1400     		// incidence meter: 	lcd refresh rate (milliseconds)
+#define INC_AVERAGETIME 1395			// incidence meter: 	time to built arithm. average (ms)
 
 #endif
 

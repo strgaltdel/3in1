@@ -5,8 +5,8 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	eeprom.h															##
 ##  content:		save customized values into EEprom; define std values &addresses..	##
-##  date:			20 Feb 2020															##
-##  rev.:			1.0																	##
+##  date:			20 Nov 2020															##
+##  rev.:			1.01																	##
 ##  by strgaltdel with special thanks to ds beach, code was inspired from his work		##
 ##########################################################################################
 
@@ -25,6 +25,11 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	
 **************************************************************************************
+
+
+//  1.0 	initial
+//	1.01	cg scale: SpanDist & PegDist.:  int>>float   (2020 Nov)
+
 
 methods:
 
@@ -120,8 +125,8 @@ struct EepromValues {
   float frontScale;
   float rearScale;
   int 	calibrationWeight;
-  int	spanDistance; 					// distance between pivot points
-  int 	pegDistance; 					// leading edge peg to first pivot point
+  float	spanDistance; 					// distance between pivot points
+  float pegDistance; 					// leading edge peg to first pivot point
   int 	metricImpOption;				// metric vs imperial units
   float flapwidth; 						// widt of flap, needed for sec. meas.
   int   reservedOption;
