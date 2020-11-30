@@ -543,35 +543,35 @@ void Eeprom::putFlapValues()
 void SprintIMUValues(){
 	eepromValues = Eeprom::getValues();						// get eeprom values
 	
-	Serial.println("IMU1 (Wing):");
+	Serial.println("IMU0:");
 	Serial.println("X Offset: \t"+ String(eepromValues.IMU1_OFFSX));
 	Serial.println("Y Offset: \t"+ String(eepromValues.IMU1_OFFSY));
 	Serial.println("Z Offset: \t"+ String(eepromValues.IMU1_OFFSZ));
 	Serial.println("X GAIN: \t"+ String(eepromValues.IMU1_GAINX));
 	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU1_GAINY));
 	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU1_GAINZ));
-	Serial.println("IMU2 (Tail):");
+	Serial.println("IMU1:");
 	Serial.println("X Offset: \t"+ String(eepromValues.IMU2_OFFSX));
 	Serial.println("Y Offset: \t"+ String(eepromValues.IMU2_OFFSY));
 	Serial.println("Z Offset: \t"+ String(eepromValues.IMU2_OFFSZ));
 	Serial.println("X GAIN: \t"+ String(eepromValues.IMU2_GAINX));
 	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU2_GAINY));
 	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU2_GAINZ));
-	Serial.println("IMU3 (V-tail):");
+	Serial.println("IMU2");
 	Serial.println("X Offset: \t"+ String(eepromValues.IMU3_OFFSX));
 	Serial.println("Y Offset: \t"+ String(eepromValues.IMU3_OFFSY));
 	Serial.println("Z Offset: \t"+ String(eepromValues.IMU3_OFFSZ));
 	Serial.println("X GAIN: \t"+ String(eepromValues.IMU3_GAINX));
 	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU3_GAINY));
 	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU3_GAINZ));	
-	Serial.println("IMU4 (Deflection1):");
+	Serial.println("IMU3:");
 	Serial.println("X Offset: \t"+ String(eepromValues.IMU4_OFFSX));
 	Serial.println("Y Offset: \t"+ String(eepromValues.IMU4_OFFSY));
 	Serial.println("Z Offset: \t"+ String(eepromValues.IMU4_OFFSZ));
 	Serial.println("X GAIN: \t"+ String(eepromValues.IMU4_GAINX));
 	Serial.println("Y GAIN: \t"+ String(eepromValues.IMU4_GAINY));
 	Serial.println("Z GAIN: \t"+ String(eepromValues.IMU4_GAINZ));		
-	Serial.println("IMU5 (Deflection2):");
+	Serial.println("IMU4:");
 	Serial.println("X Offset: \t"+ String(eepromValues.IMU5_OFFSX));
 	Serial.println("Y Offset: \t"+ String(eepromValues.IMU5_OFFSY));
 	Serial.println("Z Offset: \t"+ String(eepromValues.IMU5_OFFSZ));

@@ -5,7 +5,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 ##																						##
 ##  header file: 	incidence_main.h													##
 ##  content:		read IMU incidence values from wing & elevator and and print data	##
-##  date:			23 Jan 2020															##
+##  date:			27 Nov 2020															##
 ##  rev.:			1.0																	##
 ##  by strgaltdel																		##
 ##########################################################################################
@@ -59,7 +59,7 @@ float rad2;										// rad imu1
 #endif
 
 
-
+#define PAIRING_RUNS1 800						// number iof loops used for pairing 2 imus
 
 
 
@@ -190,7 +190,7 @@ void incidence()
 	
 // 	#############################################    user menu block     ##############################################################	
 
-	imu2=4;												// start using standard tail imu2=4 >> Vtail: imu2=5											
+	imu2=IMU_eleS;												// start using standard tail imu2=3 >> Vtail: imu2=4											
 
 		
 	
@@ -204,7 +204,7 @@ void incidence()
 //	IMU_1 = IMUsensor.getfilteredAngleValues(4);		// get LP smoothed angle values from sensor:4
 //	IMU_0 = IMUsensor.getDEMAfilteredAngleValues(3);	// get DEMA smoothed angle values from sensor:3
 //	IMU_1 = IMUsensor.getDEMAfilteredAngleValues(4);	// get DEMA smoothed angle values from sensor:4
-	IMU_0 = IMUsensor.getAngleValues(3);				// get unsmoothed angle values from sensor:3
+	IMU_0 = IMUsensor.getAngleValues(IMU_Wing);				// get unsmoothed angle values from sensor:3
 	IMU_1 = IMUsensor.getAngleValues(imu2);				// get unsmoothed angle values from sensor:4/5
 	
 	
@@ -241,8 +241,8 @@ void incidence()
 	if((millis()-startMillis) >= (INC_REFRESHRATE - INC_AVERAGETIME)){
 	// and now fill variables to built average over n readings
 		avCounter++;
-		avSum1 += IMU_0.pitch;   
-		avSum2 += IMU_1.pitch;    
+		avSum1 += IMU_0.roll;   
+		avSum2 += IMU_1.roll;    
 	}
  
 
@@ -289,7 +289,7 @@ void incidence()
 		dtostrf(angle1 - relative1,5,1,new1);						// angle wing
 		dtostrf(angle2 - relative2,5,1,new2);						// angle stab
 
-		dtostrf(angle1 - relative1 - angle2 + relative2,5,1,new5);	// difference angle
+		dtostrf((angle1 - relative1) + (angle2 - relative2),5,1,new5);	//  angle between wing and elevator
 	
 		tft.setTextColor(VALUECOLOUR);
 	
@@ -321,7 +321,7 @@ void incidence()
 		tft.setCursor(val_center, val_row3 );						// angle imu1-imu2
 		tft.println(old5);
 
-		if (((angle1 - relative1 - angle2 + relative2) < 0.3) or ((angle1 - relative1 - angle2 + relative2) > 2.0)) {
+		if ((((angle1 - relative1) + (angle2 - relative2)) < 0.4) or (((angle1 - relative1) + (angle2 - relative2)) > 2.0)) {
 			tft.setTextColor(RED);									// uncommon values: red
 		}
 		else {tft.setTextColor(GREEN);}	
@@ -332,7 +332,7 @@ void incidence()
 		dtostrf(angle1 - relative1,5,1,old1);						// store actual values into "old"
 		dtostrf(angle2 - relative2,5,1,old2);
 
-		dtostrf(angle1 - relative1 - angle2 + relative2,5,1,old5);	
+		dtostrf((angle1 - relative1) + (angle2 - relative2),5,1,old5);	
 	}																// end of display new values
 
 	
@@ -354,17 +354,17 @@ void incidence()
 	{
 		case 0:										// set both imu to zero
 		    relative1=0; relative2=0;
-		  for (int j=0; j<400; j++){
+		  for (int j=0; j<PAIRING_RUNS1; j++){
 			relative1 = relative1 + angle1;				// zero-delta imu0
 			relative2 = relative2 + angle2;				// zero-delta imu1
 		  }
-		    relative1 = relative1/400;
-			relative2 = relative2/400;
+		    relative1 = relative1/PAIRING_RUNS1;
+			relative2 = relative2/PAIRING_RUNS1;
 			update_screen = true;
 			break;
 		case 1:								// toggle standard <> V-tail
-			if (imu2==4){
-				imu2=5;
+			if (imu2==IMU_eleS){
+				imu2=IMU_eleV;
 				tft.setTextSize(valueSize-2);									
 				tft.setTextColor(BACKGROUND);
 				tft.setCursor(2, tHeight * 0.6 );					
@@ -374,7 +374,7 @@ void incidence()
 				tft.println(str_stabV);				
 				}
 			else {
-				imu2=4;
+				imu2=IMU_eleS;
 				tft.setTextSize(valueSize-2);									
 				tft.setTextColor(BACKGROUND);
 				tft.setCursor(2, tHeight * 0.6 );					
@@ -388,7 +388,9 @@ void incidence()
 
 		case 2:								// start calibration
 			imu_number = select_inc_imu();
-			handler = deflection_cal(imu_number);		
+			if 		(imu_number==0)	{handler = deflection_cal(IMU_Wing);}
+			else if (imu_number==1)	{handler = deflection_cal(IMU_eleS);}					
+			else 					{handler = deflection_cal(IMU_eleV);}				
 			update_screen = true;
 			break;
 

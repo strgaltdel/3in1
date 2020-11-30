@@ -98,6 +98,8 @@ void getImuCalData(int IMUnum)															// input: IMU number
 	ImuCAL[IMUnum].gainY = calc_ImuGain(ImuCAL[IMUnum].maxY,ImuCAL[IMUnum].minY);
 	ImuCAL[IMUnum].gainZ = calc_ImuGain(ImuCAL[IMUnum].maxZ,ImuCAL[IMUnum].minZ);
 	
+	 Serial.print("imu#: \t"); Serial.println(IMUnum);
+ 
 	return;
 }
 
@@ -253,19 +255,19 @@ int deflection_cal(int imucal_num)
 			tft.print("IMU: ");
 			switch (imucal_num)
 			{
-				case 0:
+				case IMU_Wing:
 					tft.print(str_imuEWD0);
 					break;
-				case 1:
+				case IMU_eleS:
 					tft.print(str_imuEWD1);
 					break;
-				case 2:
+				case IMU_eleV:
 					tft.print(str_imuEWD2);
 					break;
-				case 3:
+				case FLAP_0:
 					tft.print(str_imuFlap0);
 					break;
-				case 4:
+				case FLAP_1:
 					tft.print(str_imuFlap1);
 					break;
 			}

@@ -34,7 +34,13 @@ in order to adopt other IMU types you have to change:
 
 // IMU specific:
 #define IMUSCALE 16384														// IMU resolution / scaling of sensor (mpu6050=16bit, so 90 degree=14bit >> 2^14=16384)
-int angSensor_Addr[5]={0x68,0x69,0x69,0x68,0x69};							// enter addresses from sensor0, 1, 2, 3, 4 i.e. GY521: 0x68 or 0x69
+int angSensor_Addr[5]={0x69,0x68,0x69,0x68,0x68};							// enter addresses from sensor0, 1, 2, 3, 4 i.e. GY521: 0x68 or 0x69
+
+#define FLAP_0	 0						// IMU 0 data							
+#define FLAP_1   1
+#define IMU_Wing 2
+#define IMU_eleS 3
+#define IMU_eleV 4																			// INC: 0=flap0, 1=flap1  2=wing  Defl: 3=elev-std 4=elev-Vtail
 
 #define MPU6050_RA_WHO_AM_I         0x75
 #define MPU6050_WHO_AM_I_BIT        6

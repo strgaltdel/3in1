@@ -67,7 +67,7 @@ void setup() {
   */
   updateEEpromValues();										// get eeprom values
   tftinit();											  	// init tft
-  Serial.println("Rev 1.00  2.Dec 2020");
+  Serial.println("Rev 1.00  29.Nov 2020");
   
   frontCell.begin(FRONT_CELL_DOUT, FRONT_CELL_SCK);  		// init load cells (ADA)
 
@@ -118,6 +118,7 @@ void dispHeader() {
 	tft.setTextColor(CYAN);
 	tft.setCursor(tWidth*0.5-58, tHeight*0.16);
 	tft.println("Rev 1.0 by NOWAtec");
+//	tft.println("Rev 1.0, dem Paul seine");
 }
 
 void loop() {

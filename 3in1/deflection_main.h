@@ -58,6 +58,8 @@ float relative2;                  				// for zeroing
 float rad1;										// rad imu0
 float rad2;										// rad imu1
 
+
+
 #endif											
 
 #define DIFF_OK	0.65							// angle difference between Flaps which is OK 
@@ -199,8 +201,8 @@ void deflection()
 //	IMU_1 = IMUsensor.getfilteredAngleValues(4);		// get LP smoothed angle values from sensor:4
 //	IMU_0 = IMUsensor.getDEMAfilteredAngleValues(3);	// get DEMA smoothed angle values from sensor:3
 //	IMU_1 = IMUsensor.getDEMAfilteredAngleValues(4);	// get DEMA smoothed angle values from sensor:4
-	IMU_0 = IMUsensor.getAngleValues(3);				// get unsmoothed angle values from sensor:3
-	IMU_1 = IMUsensor.getAngleValues(4);				// get unsmoothed angle values from sensor:4
+	IMU_0 = IMUsensor.getAngleValues(FLAP_0);				// get unsmoothed angle values from sensor:3
+	IMU_1 = IMUsensor.getAngleValues(FLAP_1);				// get unsmoothed angle values from sensor:4
 	
 	
 	
@@ -447,7 +449,8 @@ void deflection()
 		case 2:								// start calibration
 			delay(WAIT_RETURN);
 			imu_number = select_imu();
-			handler = deflection_cal(imu_number+3);		
+			if (imu_number==0)	{handler = deflection_cal(FLAP_0);}
+			else 				{handler = deflection_cal(FLAP_1);}	
 			update_screen = true;
 			break;
 		case 3:								// set flapdepth
