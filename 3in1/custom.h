@@ -33,7 +33,7 @@ this code is part of "3in1.ino", an app to measure cg, incidence & deflection of
 
 // debug purpose
 #define DEBUG 					// print debug infos
-#define PROTO					// Prototype pcb
+//#define PROTO					// Prototype pcb
 
 //#define DEBUG_coord 			// DRAW COORD
 //#define PRINT_TOUCH_COORD		// print touched coordinates
